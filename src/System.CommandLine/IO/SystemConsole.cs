@@ -32,7 +32,21 @@ namespace System.CommandLine.IO
         /// <inheritdoc />
         public bool IsInputRedirected => Console.IsInputRedirected;
 
-        internal int GetWindowWidth() => IsOutputRedirected ? int.MaxValue : Console.WindowWidth;
+        internal int GetWindowWidth()
+        {
+            bool isAndroid = false;
+#if NET6_0_OR_GREATER
+            isAndroid = OperatingSystem.IsAndroid();
+#endif
+            if (isAndroid || IsOutputRedirected)
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                return Console.WindowWidth;
+            }
+        }
 
         private struct StandardErrorStreamWriter : IStandardStreamWriter
         {

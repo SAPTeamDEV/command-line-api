@@ -74,7 +74,13 @@ namespace System.CommandLine.Builder
                         blockProcessExit.Wait();
                         ExitCode = context.ExitCode;
                     };
-                    Console.CancelKeyPress += consoleHandler;
+
+                    bool isAndroid = false;
+#if NET6_0_OR_GREATER
+                    isAndroid = OperatingSystem.IsAndroid();
+#endif
+
+                    if (!isAndroid) Console.CancelKeyPress += consoleHandler;
                     AppDomain.CurrentDomain.ProcessExit += processExitHandler;
                 };
 
@@ -86,7 +92,11 @@ namespace System.CommandLine.Builder
                 {
                     if (cancellationHandlingAdded)
                     {
-                        Console.CancelKeyPress -= consoleHandler;
+                        bool isAndroid = false;
+#if NET6_0_OR_GREATER
+                        isAndroid = OperatingSystem.IsAndroid();
+#endif
+                        if (!isAndroid) Console.CancelKeyPress -= consoleHandler;
                         AppDomain.CurrentDomain.ProcessExit -= processExitHandler;
                         blockProcessExit!.Set();
                     }

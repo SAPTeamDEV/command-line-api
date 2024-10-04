@@ -7,6 +7,13 @@ namespace System.CommandLine.IO
     {
         internal static void SetTerminalForegroundRed(this IConsole console)
         {
+            bool isAndroid = false;
+#if NET6_0_OR_GREATER
+            isAndroid = OperatingSystem.IsAndroid();
+#endif
+
+            if (isAndroid) return;
+
             if (Platform.IsConsoleRedirectionCheckSupported &&
                 !Console.IsOutputRedirected)
             {
@@ -20,6 +27,13 @@ namespace System.CommandLine.IO
 
         internal static void ResetTerminalForegroundColor(this IConsole console)
         {
+            bool isAndroid = false;
+#if NET6_0_OR_GREATER
+            isAndroid = OperatingSystem.IsAndroid();
+#endif
+
+            if (isAndroid) return;
+
             if (Platform.IsConsoleRedirectionCheckSupported &&
                 !Console.IsOutputRedirected)
             {
